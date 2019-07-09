@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * 誕生日入力画面のサーブレット
@@ -24,6 +25,7 @@ public class InputBirthday extends HttpServlet {
 
 		response.setContentType("text/html; charset = UTF-8");
 		PrintWriter out = response.getWriter();
+		HttpSession session = request.getSession();
 
 		out.println("<html>");
 		out.println("<head>");
@@ -32,8 +34,10 @@ public class InputBirthday extends HttpServlet {
 		out.println("</head>");
 		out.println("<body>");
 		out.println("<h2>生年月日占い</h2>");
-		if(request.getAttribute("error") != null) {
-			out.println(request.getAttribute("error"));
+		if(session.getAttribute("error") != null) {
+			out.println("<p>");
+			out.println(session.getAttribute("error"));
+			out.println("</p>");
 		}
 		out.println("誕生日を入力してください(例：2019-07-08)</ br>");
 		out.println("<form action = \"/kensyuJuly8th/DateCheck\" method = \"post\" >");

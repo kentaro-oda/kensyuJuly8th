@@ -15,6 +15,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class DateCheck
@@ -32,6 +33,7 @@ public class DateCheck extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		HttpSession session = request.getSession();
 		/**
 		 * InputBirthdayから送られてきた情報をString型に変換
 		 */
@@ -65,6 +67,7 @@ public class DateCheck extends HttpServlet {
 			 * 変換した当日情報と誕生日をそれぞれリクエストスコープに格納
 			 * 過去に同じ日付で同じ誕生日が入力されていないかをチェックするサーブレットへフォワード
 			 */
+			session.invalidate();
 			request.setAttribute("today", today);
 			request.setAttribute("birthday", sqlBirthday);
 			request.getRequestDispatcher("/PastOmikujiCheck").forward(request, response);
@@ -77,7 +80,7 @@ public class DateCheck extends HttpServlet {
 			 * 誕生日入力画面へリダイレクト
 			 */
 			catch(DateTimeParseException e) {
-				request.setAttribute("error", "※日付が正しくありません。");
+				session.setAttribute("error", "※日付が正しくありません。");
 				response.sendRedirect("/kensyuJuly8th/InputBirthday");
 			}
 		}
@@ -88,7 +91,7 @@ public class DateCheck extends HttpServlet {
 		 * 誕生日入力画面へリダイレクト
 		 */
 		else {
-			request.setAttribute("error", "※入力形式が正しくありません。");
+			session.setAttribute("error", "※入力形式が正しくありません。");
 			response.sendRedirect("/kensyuJuly8th/InputBirthday");
 		}
 	}
