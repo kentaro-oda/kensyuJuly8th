@@ -17,6 +17,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import problem4.dao.OmikujiDao;
+import problem4.dao.ResultDao;
+import problem4.dto.Omikuji;
+
 /**
  * Servlet implementation class DateCheck
  *
@@ -30,6 +34,14 @@ public class DateCheck extends HttpServlet {
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 *
+	 * @param request	リクエスト情報
+	 * @param response	レスポンス情報
+	 *
+	 * @throws ServletException	サーブレット処理の例外
+	 * @throws IOException		入出力処理の例外
+	 *
+	 * 遷移先：omikuji.jsp	おみくじの結果を表示させる画面
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -64,13 +76,33 @@ public class DateCheck extends HttpServlet {
 			Date today = Date.valueOf(now2);
 
 			/**
-			 * 変換した当日情報と誕生日をそれぞれリクエストスコープに格納
-			 * 過去に同じ日付で同じ誕生日が入力されていないかをチェックするサーブレットへフォワード
+			 * セッションを破棄(入力エラーのメッセージ表示にしか使わないため)
 			 */
 			session.invalidate();
-			request.setAttribute("today", today);
-			request.setAttribute("birthday", sqlBirthday);
-			request.getRequestDispatcher("/PastOmikujiCheck").forward(request, response);
+
+			/**
+			 * 過去に同日・同誕生日で検索されたものがないかをチェックしつつ、おみくじコードを取得する
+			 */
+			Integer omikujiId = PastOmikujiCheck.pastOmikujiCheck(today, sqlBirthday);
+
+			/**
+			 * おみくじの結果を取得
+			 */
+			Omikuji omikuji = OmikujiDao.findByOmikujiId(omikujiId);
+
+			/**
+			 * 結果テーブルに同情報がない場合、登録
+			 */
+			if(ResultDao.findByFortuneDayAndBirthday(today, sqlBirthday) == null) {
+				ResultDao.insertResult(today, sqlBirthday, omikujiId);
+			}
+
+			/**
+			 * おみくじの情報をリクエストスコープに格納
+			 * omikuji.jspへフォワード
+			 */
+			request.setAttribute("omikuji", omikuji);
+			request.getRequestDispatcher("/omikuji.jsp").forward(request, response);
 
 			}
 			/**

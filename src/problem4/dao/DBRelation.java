@@ -11,7 +11,6 @@ public class DBRelation extends DBFields{
 
 	/**
 	 * DBに接続する処理
-	 * @throws SQLException
 	 */
 	public static void getConnection(){
 		try {
@@ -27,7 +26,6 @@ public class DBRelation extends DBFields{
 
 	/**
 	 * DBとの接続をきるメソッド
-	 * @throws SQLException
 	 */
 	public static void closeConnection(){
 		try {

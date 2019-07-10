@@ -21,12 +21,41 @@ import javax.servlet.http.HttpSession;
 @WebServlet("/InputBirthday")
 public class InputBirthday extends HttpServlet {
 
+	/**
+	 * 誕生日入力画面を表示(Get時)
+	 *
+	 * @param request	リクエスト情報
+	 * @param response	レスポンス情報
+	 *
+	 * @throws ServletException	サーブレット処理の例外
+	 * @throws IOException		入出力処理の例外
+	 * 遷移先：/kensyuJluy8th/DateCheck	入力チェックのサーブレットへ(過去情報やおみくじの取得、結果テーブルへの登録も合わせて行う)
+	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 
+		/**
+		 * レスポンスのMIMEタイプと文字エンコーディングを設定
+		 */
 		response.setContentType("text/html; charset = UTF-8");
+
+		/**
+		 * PrintWriter型オブジェクトを作成
+		 */
 		PrintWriter out = response.getWriter();
+
+		/**
+		 * エラーメッセージ用にセッションを用意
+		 */
 		HttpSession session = request.getSession();
 
+		/**
+		 * 誕生日入力画面のHTML
+		 *
+		 * if文：セッションにエラーメッセージが登録されてた場合、それを表示
+		 * フォーム
+		 * 送り先：/kensyuJuly8th/DateCheck	入力チェックのサーブレット
+		 * 呼び出し方：post
+		 */
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<meta chrset = \"UTF-8\" >");
@@ -46,6 +75,21 @@ public class InputBirthday extends HttpServlet {
 		out.println("</form>");
 		out.println("</body>");
 		out.println("</html>");
+	}
+
+	/**
+	 * 誕生日入力画面を表示(Post時)
+	 *
+	 * @param request	リクエスト情報
+	 * @param response	レスポンス情報
+	 *
+	 * @throws ServletException	サーブレット処理の例外
+	 * @throws IOException		入出力処理の例外
+	 *
+	 * doGetを呼び出す
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doGet(request, response);
 	}
 
 }

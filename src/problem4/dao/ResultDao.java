@@ -37,7 +37,9 @@ public class ResultDao extends DBFields{
 			} else {
 				return null;
 			}
-		} catch (SQLException e) {
+		}
+
+		catch (SQLException e) {
 			e.printStackTrace();
 			return null;
 		}
